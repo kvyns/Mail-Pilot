@@ -1,6 +1,7 @@
 // Centralized API configuration
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://jqxgqsopz8.execute-api.eu-west-2.amazonaws.com/prod/v1',
+  UPLOAD_BASE_URL: import.meta.env.VITE_UPLOAD_BASE_URL || 'https://m4t4jr1ic5.execute-api.eu-west-2.amazonaws.com/prod/v1',
   TIMEOUT: 10000,
   HEADERS: {
     'Content-Type': 'application/json',
@@ -10,10 +11,27 @@ export const API_CONFIG = {
 // API endpoints
 export const API_ENDPOINTS = {
   // Auth
-  LOGIN: '/auth/login',
-  REGISTER: '/auth/register',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  EMAIL_VERIFY: '/email/verify',
+  VALIDATE_TOKEN: '/validate/token',
+  RESEND_CODE: '/code',
   LOGOUT: '/auth/logout',
   REFRESH_TOKEN: '/auth/refresh',
+  
+  // Password
+  PASSWORD_CHANGE: '/password/change',
+  PASSWORD_RESET: '/password/reset',
+  
+  // User
+  USER_PROFILE: '/user',
+  
+  // Business
+  BUSINESS_ADD: '/business/add',
+  
+  // Upload (different base URL)
+  UPLOAD_PRESIGNED_URL: '/upload',
+  DOWNLOAD_PRESIGNED_URL: '/download',
   
   // Users
   USERS: '/users',
