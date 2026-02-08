@@ -28,9 +28,22 @@ apiClient.interceptors.response.use(
     return response.data;
   },
   (error) => {
+    console.error('API Error:', error);
+    
     // Handle specific error codes
     if (error.response) {
       const { status, data } = error.response;
+      
+      console.error('Error response:', { status, data });
+      
+      // Parse AWS SES email verification errors
+      let errorMessage = data.message || data.error || 'An error occurred';
+      
+      if (errorMessage.includes('MessageRejected') && errorMessage.includes('not verified')) {
+        const emailMatch = errorMessage.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+        const email = emailMatch ? emailMatch[1] : '';
+        errorMessage = `Email verification required: The email address ${email ? `"${email}" ` : ''}needs to be verified in AWS SES before you can register. Please contact the administrator or verify your email in the AWS SES console.`;
+      }
       
       switch (status) {
         case 401:
@@ -40,22 +53,34 @@ apiClient.interceptors.response.use(
           window.location.href = '/login';
           break;
         case 403:
-          console.error('Forbidden:', data.message);
+          console.error('Forbidden:', errorMessage);
           break;
         case 404:
-          console.error('Not found:', data.message);
+          console.error('Not found:', errorMessage);
           break;
         case 500:
-          console.error('Server error:', data.message);
+          console.error('Server error:', errorMessage);
           break;
         default:
-          console.error('API error:', data.message);
+          console.error('API error:', errorMessage);
       }
       
-      return Promise.reject(data);
+      return Promise.reject({
+        message: errorMessage,
+        ...data
+      });
     }
     
-    return Promise.reject(error);
+    if (error.request) {
+      console.error('No response received:', error.request);
+      return Promise.reject({
+        message: 'No response from server. Please check your connection.'
+      });
+    }
+    
+    return Promise.reject({
+      message: error.message || 'An unexpected error occurred'
+    });
   }
 );
 

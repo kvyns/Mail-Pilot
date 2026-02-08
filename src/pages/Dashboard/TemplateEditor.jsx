@@ -3,10 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
+import Modal from '../../components/common/Modal';
 import EnhancedEmailBuilder from '../../components/dragDrop/EnhancedEmailBuilder';
 import { useTemplateStore } from '../../store/templateStore';
 import Loader from '../../components/common/Loader';
-import { Save, Eye, ArrowLeft, FileText } from 'lucide-react';
+import { Save, Eye, ArrowLeft, FileText, Copy, Check, Code } from 'lucide-react';
 
 const TemplateEditor = () => {
   const { id } = useParams();
@@ -16,6 +17,8 @@ const TemplateEditor = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showPreview, setShowPreview] = useState(true);
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [showHtmlModal, setShowHtmlModal] = useState(false);
   const [template, setTemplate] = useState({
     name: '',
     subject: '',
@@ -65,6 +68,75 @@ const TemplateEditor = () => {
       schema: { blocks },
     }));
   }, []);
+
+  const generateHTML = () => {
+    const blocks = template.schema.blocks || [];
+    
+    let html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${template.subject || 'Email Template'}</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+`;
+
+    blocks.forEach(block => {
+      if (block.type === 'text') {
+        html += `  <div style="margin-bottom: 16px;">${block.content}</div>\n`;
+      } else if (block.type === 'image') {
+        const align = block.align === 'justify-start' ? 'left' : block.align === 'justify-end' ? 'right' : 'center';
+        html += `  <div style="text-align: ${align}; margin-bottom: 16px;">\n`;
+        html += `    <img src="${block.content}" alt="${block.alt || 'Image'}" style="width: ${block.width || 'auto'}; max-width: 100%; border-radius: 8px;" />\n`;
+        html += `  </div>\n`;
+      } else if (block.type === 'button') {
+        const align = block.align === 'justify-start' ? 'left' : block.align === 'justify-end' ? 'right' : 'center';
+        html += `  <div style="text-align: ${align}; margin-bottom: 16px;">\n`;
+        html += `    <a href="${block.link || '#'}" style="background-color: ${block.bgColor || '#3b82f6'}; color: ${block.textColor || '#ffffff'}; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600;">${block.content || 'Button'}</a>\n`;
+        html += `  </div>\n`;
+      } else if (block.type === 'divider') {
+        html += `  <hr style="border: 0; border-top: 1px solid ${block.color || '#e5e7eb'}; margin: 24px 0;" />\n`;
+      } else if (block.type === 'spacer') {
+        html += `  <div style="height: ${block.height || 20}px;"></div>\n`;
+      }
+    });
+
+    html += `</body>
+</html>`;
+    
+    return html;
+  };
+
+  const handleCopyHTML = async () => {
+    try {
+      const html = generateHTML();
+      await navigator.clipboard.writeText(html);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy HTML:', error);
+      alert('Failed to copy HTML to clipboard');
+    }
+  };
   
   const renderPreview = () => {
     return (
@@ -173,6 +245,20 @@ const TemplateEditor = () => {
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"
+              onClick={() => setShowHtmlModal(true)}
+              icon={<Code className="w-4 h-4" />}
+            >
+              View Code
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleCopyHTML}
+              icon={copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            >
+              {copySuccess ? 'Copied!' : 'Copy HTML'}
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => setShowPreview(!showPreview)}
               icon={showPreview ? <Eye className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             >
@@ -229,6 +315,38 @@ const TemplateEditor = () => {
           </div>
         )}
       </div>
+
+      {/* HTML Code Modal */}
+      <Modal
+        isOpen={showHtmlModal}
+        onClose={() => setShowHtmlModal(false)}
+        title="Template HTML Code"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600">
+            Copy this HTML code to use in your email campaigns or other applications.
+          </p>
+          <div className="relative">
+            <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm max-h-96">
+              <code>{generateHTML()}</code>
+            </pre>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleCopyHTML}
+              className="absolute top-2 right-2 bg-white"
+              icon={copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            >
+              {copySuccess ? 'Copied!' : 'Copy'}
+            </Button>
+          </div>
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setShowHtmlModal(false)}>
+              Close
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </DashboardLayout>
   );
 };

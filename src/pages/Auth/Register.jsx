@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authAPI } from '../api';
+import { authAPI } from '../../api';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import { isValidEmail, validatePassword } from '../../utils/validators';
@@ -20,6 +20,7 @@ const Register = () => {
   
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [apiResponse, setApiResponse] = useState({ type: '', message: '' });
   const [formData, setFormData] = useState({
     // Step 1: Sign Up
     name: '',
@@ -42,6 +43,9 @@ const Register = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+    if (apiResponse.message) {
+      setApiResponse({ type: '', message: '' });
     }
   };
 
@@ -114,9 +118,15 @@ const Register = () => {
   };
 
   const handleStep1Next = async () => {
-    if (!validateStep1()) return;
+    console.log('handleStep1Next called');
+    if (!validateStep1()) {
+      console.log('Validation failed');
+      return;
+    }
     
+    console.log('Validation passed, calling register API');
     setIsLoading(true);
+    setApiResponse({ type: '', message: '' });
     try {
       const result = await authAPI.register({
         name: formData.name,
@@ -125,10 +135,17 @@ const Register = () => {
         password: formData.password,
       });
       
+      console.log('Register API response:', result);
       if (result.success) {
+        console.log('Registration successful, moving to step 2');
+        setApiResponse({ type: 'success', message: result.data?.message || 'Verification code sent to your email!' });
         setCurrentStep(2);
+      } else {
+        setApiResponse({ type: 'error', message: result.error || 'Registration failed. Please try again.' });
       }
     } catch (error) {
+      console.error('Registration error:', error);
+      setApiResponse({ type: 'error', message: error.message || 'Registration failed. Please try again.' });
       setErrors({ email: error.message || 'Registration failed' });
     } finally {
       setIsLoading(false);
@@ -139,16 +156,22 @@ const Register = () => {
     if (!validateStep2()) return;
     
     setIsLoading(true);
+    setApiResponse({ type: '', message: '' });
     try {
       const result = await authAPI.verifyEmail({
         email: formData.email,
-        verificationCode: formData.verificationCode,
+        code: formData.verificationCode,
       });
       
       if (result.success) {
+        setApiResponse({ type: 'success', message: 'Email verified successfully!' });
         setCurrentStep(3);
+      } else {
+        setApiResponse({ type: 'error', message: result.error || 'Verification failed. Please check your code.' });
       }
     } catch (error) {
+      console.error('Verification error:', error);
+      setApiResponse({ type: 'error', message: error.message || 'Verification failed. Please check your code.' });
       setErrors({ verificationCode: error.message || 'Verification failed' });
     } finally {
       setIsLoading(false);
@@ -159,6 +182,7 @@ const Register = () => {
     if (!validateStep3()) return;
     
     setIsLoading(true);
+    setApiResponse({ type: '', message: '' });
     try {
       const result = await authAPI.addBusinessDetails({
         email: formData.email,
@@ -175,12 +199,17 @@ const Register = () => {
           localStorage.setItem('user', JSON.stringify(result.data.user));
         }
         
+        setApiResponse({ type: 'success', message: 'Registration completed successfully!' });
         setCurrentStep(4);
         setTimeout(() => {
           navigate('/dashboard');
         }, 2000);
+      } else {
+        setApiResponse({ type: 'error', message: result.error || 'Failed to complete registration' });
       }
     } catch (error) {
+      console.error('Business details error:', error);
+      setApiResponse({ type: 'error', message: error.message || 'Failed to complete registration' });
       setErrors({ businessName: error.message || 'Failed to complete registration' });
     } finally {
       setIsLoading(false);
@@ -287,6 +316,8 @@ const Register = () => {
       <Button 
         fullWidth 
         onClick={handleStep1Next}
+        loading={isLoading}
+        disabled={isLoading}
         icon={<ArrowRight className="w-4 h-4" />}
       >
         Continue to Verification
@@ -341,6 +372,8 @@ const Register = () => {
         <Button 
           fullWidth 
           onClick={handleStep2Next}
+          loading={isLoading}
+          disabled={isLoading}
           icon={<ArrowRight className="w-4 h-4" />}
         >
           Verify & Continue
@@ -458,11 +491,14 @@ const Register = () => {
         <CheckCircle className="w-16 h-16 text-green-600" />
       </div>
       <h2 className="text-3xl font-bold text-slate-900 mb-3">Welcome to Mail Pilot!</h2>
-      <p className="text-slate-600 mb-6">
-        Your account has been successfully created.<br />
-        Redirecting to your dashboard...
+      <p className="text-slate-600 mb-4">
+        Your account has been successfully created.
       </p>
-      <div className="flex items-center justify-center space-x-2 text-blue-600">
+      <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold mb-6">
+        <Briefcase className="w-5 h-5" />
+        <span>Super Admin Role Assigned</span>
+      </div>
+      <div className="flex items-center justify-center space-x-2 text-blue-600 mt-4">
         <Laptop className="w-5 h-5 animate-pulse" />
         <span className="font-medium">Setting up your workspace...</span>
       </div>
@@ -482,6 +518,30 @@ const Register = () => {
         
         {/* Registration Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+          {/* API Response Message */}
+          {apiResponse.message && (
+            <div className={`mb-6 p-4 rounded-lg border ${
+              apiResponse.type === 'success' 
+                ? 'bg-green-50 border-green-200 text-green-800' 
+                : 'bg-red-50 border-red-200 text-red-800'
+            }`}>
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  {apiResponse.type === 'success' ? (
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                  ) : (
+                    <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium">{apiResponse.message}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
           {renderStepIndicator()}
           
           {currentStep === 1 && renderStep1()}

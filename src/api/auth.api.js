@@ -2,7 +2,7 @@ import apiClient from './apiClient';
 import { API_ENDPOINTS } from './config';
 
 // Mock mode - set to false when backend is ready
-const MOCK_MODE = true;
+const MOCK_MODE = false;
 
 // Mock delay to simulate network request
 const mockDelay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
@@ -14,6 +14,26 @@ const mockUser = {
   name: 'Demo User',
   role: 'admin',
 };
+
+// Mock accounts for multi-account testing
+const mockAccounts = [
+  {
+    id: 1,
+    businessName: 'TechCorp Solutions',
+    businessType: 'Technology',
+    industry: 'Software Development',
+    companySize: '50-200 employees',
+    role: 'admin',
+  },
+  {
+    id: 2,
+    businessName: 'Marketing Agency Pro',
+    businessType: 'Marketing',
+    industry: 'Digital Marketing',
+    companySize: '10-50 employees',
+    role: 'manager',
+  },
+];
 
 export const authAPI = {
   // Login
@@ -27,6 +47,7 @@ export const authAPI = {
           data: {
             user: mockUser,
             token,
+            accounts: mockAccounts, // Multiple accounts for this user
           },
         };
       }
@@ -73,7 +94,7 @@ export const authAPI = {
     
     return apiClient.post(API_ENDPOINTS.EMAIL_VERIFY, {
       email: verificationData.email,
-      code: verificationData.verificationCode,
+      code: verificationData.code,
     });
   },
 
@@ -155,8 +176,8 @@ export const authAPI = {
     return apiClient.get(API_ENDPOINTS.USER_PROFILE);
   },
 
-  // Resend Verification Code
-  resendCode: async (email) => {
+  // Resend Verification Code / Generate Code
+  resendCode: async (email, reason = 'Email Verification') => {
     if (MOCK_MODE) {
       await mockDelay(500);
       return {
@@ -167,10 +188,13 @@ export const authAPI = {
       };
     }
     
-    return apiClient.post(API_ENDPOINTS.RESEND_CODE, { email });
+    return apiClient.post(API_ENDPOINTS.RESEND_CODE, { 
+      email,
+      reason // 'Email Verification' or 'Reset Password'
+    });
   },
 
-  // Change Password
+  // Change Password (requires authentication)
   changePassword: async (passwordData) => {
     if (MOCK_MODE) {
       await mockDelay(500);
@@ -183,7 +207,8 @@ export const authAPI = {
     }
     
     return apiClient.post(API_ENDPOINTS.PASSWORD_CHANGE, {
-      currentPassword: passwordData.currentPassword,
+      email: passwordData.email,
+      password: passwordData.password,
       newPassword: passwordData.newPassword,
     });
   },

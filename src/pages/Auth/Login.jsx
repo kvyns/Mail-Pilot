@@ -59,7 +59,19 @@ const Login = () => {
     const result = await login(formData);
     
     if (result.success) {
-      navigate('/dashboard');
+      // Check if user has multiple accounts
+      if (result.multipleAccounts) {
+        // Navigate to account selection page
+        navigate('/select-account', {
+          state: {
+            accounts: result.accounts,
+            email: formData.email,
+          },
+        });
+      } else {
+        // Single account - go directly to dashboard
+        navigate('/dashboard');
+      }
     }
   };
   
@@ -114,6 +126,12 @@ const Login = () => {
               error={errors.password}
               required
             />
+            
+            <div className="flex items-center justify-end">
+              <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                Forgot password?
+              </Link>
+            </div>
             
             <Button 
               type="submit" 

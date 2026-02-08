@@ -25,15 +25,20 @@ import {
 
 // Rich Text Editor Component
 const RichTextEditor = ({ content, onChange }) => {
-  const [text, setText] = useState(content);
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
   const editorRef = React.useRef(null);
   
+  // Set initial content only once
+  React.useEffect(() => {
+    if (editorRef.current && !editorRef.current.innerHTML) {
+      editorRef.current.innerHTML = content;
+    }
+  }, []);
+  
   const execCommand = (command, value = null) => {
     document.execCommand(command, false, value);
     const newContent = editorRef.current.innerHTML;
-    setText(newContent);
     onChange(newContent);
   };
   
@@ -47,7 +52,6 @@ const RichTextEditor = ({ content, onChange }) => {
   
   const handleInput = () => {
     const newContent = editorRef.current.innerHTML;
-    setText(newContent);
     onChange(newContent);
   };
   
@@ -137,7 +141,6 @@ const RichTextEditor = ({ content, onChange }) => {
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        dangerouslySetInnerHTML={{ __html: text }}
         className="p-4 min-h-[150px] focus:outline-none prose max-w-none"
       />
       

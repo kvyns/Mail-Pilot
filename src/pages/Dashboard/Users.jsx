@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -8,8 +9,10 @@ import Loader from '../../components/common/Loader';
 import { useUserStore } from '../../store/userStore';
 import { parseCSV } from '../../utils/csvParser';
 import { parseExcel } from '../../utils/excelParser';
+import { UserPlus } from 'lucide-react';
 
 const Users = () => {
+  const navigate = useNavigate();
   const { users, isLoading, fetchUsers, addUser, deleteUser, importUsers, filters, setFilters } = useUserStore();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -78,8 +81,20 @@ const Users = () => {
         subtitle={`${users.length} total users`}
         headerAction={
           <div className="flex space-x-2">
-            <Button size="sm" variant="outline" onClick={() => setShowImportModal(true)}>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => setShowImportModal(true)}
+            >
               Import CSV/Excel
+            </Button>
+            <Button 
+              size="sm" 
+              variant="outline"
+              onClick={() => navigate('/dashboard/users/invite')}
+            >
+              <UserPlus className="w-4 h-4 mr-2" />
+              Invite User
             </Button>
             <Button size="sm" onClick={() => setShowAddModal(true)}>
               Add User

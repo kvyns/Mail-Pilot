@@ -1,7 +1,8 @@
 // Centralized API configuration
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://jqxgqsopz8.execute-api.eu-west-2.amazonaws.com/prod/v1',
-  UPLOAD_BASE_URL: import.meta.env.VITE_UPLOAD_BASE_URL || 'https://m4t4jr1ic5.execute-api.eu-west-2.amazonaws.com/prod/v1',
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? '/api' : 'https://jqxgqsopz8.execute-api.eu-west-2.amazonaws.com/prod/v1'),
+  UPLOAD_BASE_URL: import.meta.env.VITE_UPLOAD_BASE_URL || (import.meta.env.DEV ? '/upload-api' : 'https://m4t4jr1ic5.execute-api.eu-west-2.amazonaws.com/prod/v1'),
+  CDN_BASE_URL: import.meta.env.VITE_CDN_BASE_URL || 'https://d2nw8bxx6o9c62.cloudfront.net',
   TIMEOUT: 10000,
   HEADERS: {
     'Content-Type': 'application/json',
@@ -37,6 +38,9 @@ export const API_ENDPOINTS = {
   USERS: '/users',
   USERS_IMPORT: '/users/import',
   USERS_EXPORT: '/users/export',
+  USERS_INVITE: '/users/invite',
+  USERS_ACTIVATE: '/users/activate',
+  USERS_RESEND_INVITE: '/users/resend-invite',
   
   // Campaigns
   CAMPAIGNS: '/campaigns',

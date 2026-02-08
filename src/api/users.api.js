@@ -1,7 +1,7 @@
 import apiClient from './apiClient';
 import { API_ENDPOINTS } from './config';
 
-const MOCK_MODE = true;
+const MOCK_MODE = false;
 const mockDelay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Mock users data
@@ -114,6 +114,67 @@ export const usersAPI = {
     return apiClient.post(API_ENDPOINTS.USERS_IMPORT, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
+  },
+
+  // Invite user
+  invite: async (inviteData) => {
+    if (MOCK_MODE) {
+      await mockDelay();
+      return {
+        success: true,
+        data: {
+          email: inviteData.email,
+          role: inviteData.role,
+          invitationSent: true,
+          invitationId: 'INV-' + Date.now(),
+          message: 'Invitation sent successfully',
+        },
+      };
+    }
+    
+    return apiClient.post(API_ENDPOINTS.USERS_INVITE, inviteData);
+  },
+
+  // Activate invited user
+  activate: async (activationData) => {
+    if (MOCK_MODE) {
+      await mockDelay();
+      const newUser = {
+        id: Date.now(),
+        email: activationData.email,
+        name: activationData.name,
+        role: activationData.role || 'user',
+        status: 'active',
+        createdAt: new Date().toISOString().split('T')[0],
+      };
+      mockUsers.push(newUser);
+      const token = 'mock-jwt-token-' + Date.now();
+      return {
+        success: true,
+        data: {
+          user: newUser,
+          token,
+        },
+      };
+    }
+    
+    return apiClient.post(API_ENDPOINTS.USERS_ACTIVATE, activationData);
+  },
+
+  // Resend invitation
+  resendInvite: async (email) => {
+    if (MOCK_MODE) {
+      await mockDelay();
+      return {
+        success: true,
+        data: {
+          email,
+          message: 'Invitation resent successfully',
+        },
+      };
+    }
+    
+    return apiClient.post(API_ENDPOINTS.USERS_RESEND_INVITE, { email });
   },
 
   // Export users

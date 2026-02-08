@@ -76,7 +76,7 @@ const Templates = () => {
         title="Email Templates"
         subtitle={`${templates.length} templates created`}
         headerAction={
-          <Button onClick={() => setShowCreateModal(true)}>
+          <Button onClick={() => navigate('/dashboard/templates/create')}>
             Create Template
           </Button>
         }
@@ -86,7 +86,7 @@ const Templates = () => {
         ) : templates.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 mb-4">No templates yet</p>
-            <Button onClick={() => setShowCreateModal(true)}>Create Your First Template</Button>
+            <Button onClick={() => navigate('/dashboard/templates/create')}>Create Your First Template</Button>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

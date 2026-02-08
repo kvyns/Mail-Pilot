@@ -1,7 +1,7 @@
 import apiClient from './apiClient';
 import { API_ENDPOINTS } from './config';
 
-const MOCK_MODE = true;
+const MOCK_MODE = false;
 const mockDelay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Mock templates data

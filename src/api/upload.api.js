@@ -1,6 +1,7 @@
 /**
  * Upload API - Handles image uploads for profile pictures and business logos
  * Uses separate upload service with pre-signed S3 URLs
+ * Uploaded images are accessible via CloudFront CDN: https://d2nw8bxx6o9c62.cloudfront.net/${imageID}
  * 
  * @example Basic Usage - Upload Profile Picture
  * ```javascript
@@ -12,7 +13,8 @@
  *   try {
  *     const result = await uploadAPI.uploadFile(file, 'profile');
  *     console.log('Uploaded:', result.data.fileUrl);
- *     // Save result.data.fileUrl to user profile
+ *     console.log('CDN URL:', result.data.cdnUrl); // CloudFront URL
+ *     // Save result.data.cdnUrl to user profile for fast access
  *   } catch (error) {
  *     console.error('Upload failed:', error);
  *   }
@@ -53,7 +55,7 @@ import axios from 'axios';
 import { API_CONFIG, API_ENDPOINTS } from './config';
 
 // Mock mode - set to false when backend is ready
-const MOCK_MODE = true;
+const MOCK_MODE = false;
 
 // Mock delay to simulate network request
 const mockDelay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
@@ -100,12 +102,15 @@ export const uploadAPI = {
   getUploadUrl: async (fileData) => {
     if (MOCK_MODE) {
       await mockDelay();
+      const imageId = `${Date.now()}-${fileData.fileName}`;
       return {
         success: true,
         data: {
           uploadUrl: 'https://mock-s3-bucket.amazonaws.com/upload-url',
-          fileUrl: `https://mock-cdn.example.com/images/${Date.now()}-${fileData.fileName}`,
-          key: `uploads/${Date.now()}-${fileData.fileName}`,
+          fileUrl: `https://mock-s3-bucket.amazonaws.com/uploads/${imageId}`,
+          cdnUrl: `https://d2nw8bxx6o9c62.cloudfront.net/${imageId}`,
+          imageId: imageId,
+          key: `uploads/${imageId}`,
         },
       };
     }
@@ -169,17 +174,31 @@ export const uploadAPI = {
       // Step 2: Upload to S3
       await uploadAPI.uploadToS3(urlResponse.data.uploadUrl, file);
 
-      // Return the file URL
+      // Return the file URL and CDN URL
       return {
         success: true,
         data: {
           fileUrl: urlResponse.data.fileUrl,
+          cdnUrl: urlResponse.data.cdnUrl,
+          imageId: urlResponse.data.imageId,
           key: urlResponse.data.key,
         },
       };
     } catch (error) {
       throw error;
     }
+  },
+
+  /**
+   * Get CloudFront CDN URL for an image
+   * @param {string} imageId - Image identifier (filename or ID)
+   * @returns {string} Full CloudFront CDN URL
+   * @example
+   * const cdnUrl = uploadAPI.getCdnUrl('profile-123456.jpg');
+   * // Returns: https://d2nw8bxx6o9c62.cloudfront.net/profile-123456.jpg
+   */
+  getCdnUrl: (imageId) => {
+    return `${API_CONFIG.CDN_BASE_URL}/${imageId}`;
   },
 
   /**
