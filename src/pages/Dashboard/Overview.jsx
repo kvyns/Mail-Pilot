@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import Card from '../../components/common/Card';
 import { useCreditStore } from '../../store/creditStore';
@@ -8,6 +9,7 @@ import Loader from '../../components/common/Loader';
 import { CreditCard, Mail, Users, BarChart3, FileText } from 'lucide-react';
 
 const Overview = () => {
+  const navigate = useNavigate();
   const { balance, used, fetchBalance } = useCreditStore();
   const { campaigns, stats, fetchCampaigns, fetchStats } = useCampaignStore();
   const { users, fetchUsers } = useUserStore();
@@ -41,7 +43,7 @@ const Overview = () => {
       title: 'Available Credits',
       value: balance.toLocaleString(),
       icon: CreditCard,
-      color: 'bg-blue-500',
+      color: 'bg-primary-500',
       subtitle: `${used.toLocaleString()} credits used`,
     },
     {
@@ -133,17 +135,17 @@ const Overview = () => {
         <Card title="Quick Actions" subtitle="Common tasks">
           <div className="grid grid-cols-2 gap-4">
             <button
-              onClick={() => window.location.href = '/dashboard/campaigns'}
-              className="p-6 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-center group"
+              onClick={() => navigate('/dashboard/campaigns')}
+              className="p-6 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors text-center group"
             >
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-600 transition-colors">
+              <div className="w-12 h-12 bg-primary-500 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-600 transition-colors">
                 <Mail className="w-6 h-6 text-white" />
               </div>
               <div className="font-medium text-slate-900">New Campaign</div>
             </button>
             
             <button
-              onClick={() => window.location.href = '/dashboard/templates'}
+              onClick={() => navigate('/dashboard/templates')}
               className="p-6 bg-green-50 hover:bg-green-100 rounded-lg transition-colors text-center group"
             >
               <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-green-600 transition-colors">
@@ -153,7 +155,7 @@ const Overview = () => {
             </button>
             
             <button
-              onClick={() => window.location.href = '/dashboard/users'}
+              onClick={() => navigate('/dashboard/users')}
               className="p-6 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors text-center group"
             >
               <div className="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-indigo-600 transition-colors">
@@ -163,7 +165,7 @@ const Overview = () => {
             </button>
             
             <button
-              onClick={() => window.location.href = '/dashboard/credits'}
+              onClick={() => navigate('/dashboard/credits')}
               className="p-6 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors text-center group"
             >
               <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-600 transition-colors">

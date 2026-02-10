@@ -19,7 +19,7 @@ const Landing = () => {
       icon: Mail,
       title: 'Email Campaigns',
       description: 'Create and send targeted email campaigns to your audience with ease.',
-      color: 'bg-blue-500',
+      color: 'bg-primary-500',
     },
     {
       icon: CreditCard,
@@ -54,11 +54,11 @@ const Landing = () => {
   ];
   
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-blue-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-primary-50">
       {/* Navbar */}
       <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto">
         <div className="flex items-center space-x-3">
-          <Plane className="w-8 h-8 text-blue-600" />
+          <img src="/mail-pilot-logo.png" alt="Mail Pilot Logo" className="w-10 h-10" />
           <span className="text-2xl font-bold text-slate-900">Mail Pilot</span>
         </div>
         <Button onClick={() => navigate('/login')}>
@@ -86,9 +86,9 @@ const Landing = () => {
         
         {/* Hero Image/Illustration */}
         <div className="mt-16 bg-white rounded-2xl shadow-2xl p-8 max-w-5xl mx-auto border border-slate-200">
-          <div className="aspect-video bg-linear-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
+          <div className="aspect-video bg-linear-to-br from-primary-100 to-indigo-100 rounded-lg flex items-center justify-center">
             <div className="flex gap-6">
-              <BarChart3 className="w-20 h-20 text-blue-600" />
+              <BarChart3 className="w-20 h-20 text-primary-600" />
               <Mail className="w-20 h-20 text-indigo-600" />
               <Users className="w-20 h-20 text-purple-600" />
             </div>
@@ -132,7 +132,7 @@ const Landing = () => {
       
       {/* CTA Section */}
       <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="bg-blue-600 rounded-2xl p-12 text-center text-white">
+        <div className="bg-primary-600 rounded-2xl p-12 text-center text-white">
           <h2 className="text-4xl font-bold mb-4">
             Ready to Get Started?
           </h2>

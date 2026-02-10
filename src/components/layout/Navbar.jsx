@@ -65,16 +65,16 @@ const Navbar = ({ title }) => {
                     key={account.id}
                     onClick={() => handleSwitchAccount(account)}
                     className={`w-full px-3 py-2 text-left hover:bg-gray-50 transition-colors flex items-center justify-between ${
-                      selectedAccount?.id === account.id ? 'bg-blue-50' : ''
+                      selectedAccount?.id === account.id ? 'bg-primary-50' : ''
                     }`}
                   >
                     <div className="flex items-center space-x-2 flex-1 min-w-0">
                       <Building2 className={`w-4 h-4 flex-shrink-0 ${
-                        selectedAccount?.id === account.id ? 'text-blue-600' : 'text-gray-400'
+                        selectedAccount?.id === account.id ? 'text-primary-600' : 'text-gray-400'
                       }`} />
                       <div className="min-w-0 flex-1">
                         <p className={`text-sm font-medium truncate ${
-                          selectedAccount?.id === account.id ? 'text-blue-600' : 'text-gray-900'
+                          selectedAccount?.id === account.id ? 'text-primary-600' : 'text-gray-900'
                         }`}>
                           {account.businessName}
                         </p>
@@ -82,7 +82,7 @@ const Navbar = ({ title }) => {
                       </div>
                     </div>
                     {selectedAccount?.id === account.id && (
-                      <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                      <Check className="w-4 h-4 text-primary-600 flex-shrink-0" />
                     )}
                   </button>
                 ))}

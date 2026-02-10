@@ -135,8 +135,8 @@ const ForgotPassword = () => {
   const renderStepEmail = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Mail className="w-10 h-10 text-blue-600" />
+        <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Mail className="w-10 h-10 text-primary-600" />
         </div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Forgot Password?</h2>
         <p className="text-slate-600">
@@ -165,7 +165,7 @@ const ForgotPassword = () => {
       </Button>
 
       <div className="text-center">
-        <Link to="/login" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+        <Link to="/login" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
           Back to Login
         </Link>
       </div>
@@ -187,8 +187,8 @@ const ForgotPassword = () => {
         </p>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-sm text-blue-800">
+      <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+        <p className="text-sm text-primary-800">
           <strong>For demo:</strong> Use any 6-digit code (e.g., 123456)
         </p>
       </div>
@@ -209,7 +209,7 @@ const ForgotPassword = () => {
         <button 
           onClick={handleResendCode}
           disabled={isLoading}
-          className="text-blue-600 hover:text-blue-700 text-sm font-medium disabled:opacity-50"
+          className="text-primary-600 hover:text-primary-700 text-sm font-medium disabled:opacity-50"
         >
           Resend verification code
         </button>
@@ -239,8 +239,8 @@ const ForgotPassword = () => {
   const renderStepPassword = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Lock className="w-10 h-10 text-blue-600" />
+        <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Lock className="w-10 h-10 text-primary-600" />
         </div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Set New Password</h2>
         <p className="text-slate-600">
@@ -300,7 +300,7 @@ const ForgotPassword = () => {
         Your password has been successfully reset.<br />
         Redirecting to login...
       </p>
-      <div className="flex items-center justify-center space-x-2 text-blue-600">
+      <div className="flex items-center justify-center space-x-2 text-primary-600">
         <Lock className="w-5 h-5 animate-pulse" />
         <span className="font-medium">Securing your account...</span>
       </div>
@@ -308,12 +308,12 @@ const ForgotPassword = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
-            <Plane className="w-10 h-10 text-blue-600" />
+            <img src="/mail-pilot-logo.png" alt="Mail Pilot Logo" className="w-12 h-12" />
             <span className="text-3xl font-bold text-slate-900">Mail Pilot</span>
           </Link>
         </div>

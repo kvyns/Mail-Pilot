@@ -93,7 +93,7 @@ const Templates = () => {
             {templates.map((template) => (
               <div key={template.id} className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="aspect-video bg-slate-100 flex items-center justify-center">
-                  <div className="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <div className="w-16 h-16 bg-primary-500 rounded-lg flex items-center justify-center">
                     <FileText className="w-8 h-8 text-white" />
                   </div>
                 </div>

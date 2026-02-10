@@ -1,5 +1,40 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary-50: #ecfdfb;
+  --color-primary-100: #d1faf4;
+  --color-primary-200: #a7f3eb;
+  --color-primary-300: #6ee7dc;
+  --color-primary-400: #3fd0c6;
+  --color-primary-500: #2bb5ad;
+  --color-primary-600: #1f9a94;
+  --color-primary-700: #1b7c77;
+  --color-primary-800: #195f5c;
+  --color-primary-900: #134645;
+  
+  --color-neutral-50: #f8fcfc;
+  --color-neutral-100: #eef6f6;
+  --color-neutral-200: #ddeaea;
+  --color-neutral-300: #c3d6d6;
+  --color-neutral-400: #9fbcbc;
+  --color-neutral-500: #7a9c9c;
+  --color-neutral-600: #5c7f7f;
+  --color-neutral-700: #466363;
+  --color-neutral-800: #324848;
+  --color-neutral-900: #1f2f2f;
+  
+  --color-accent-50: #f0f9ff;
+  --color-accent-100: #e0f2fe;
+  --color-accent-200: #bae6fd;
+  --color-accent-300: #7dd3fc;
+  --color-accent-400: #38bdf8;
+  --color-accent-500: #0ea5e9;
+  --color-accent-600: #0284c7;
+  --color-accent-700: #0369a1;
+  --color-accent-800: #075985;
+  --color-accent-900: #0c4a6e;
+}
+
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
@@ -22,4 +57,18 @@
 /* Smooth transitions */
 * {
   transition: colors 200ms;
+}
+
+/* Global placeholder color */
+::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  color: #94a3b8;
+}
+
+::-ms-input-placeholder {
+  color: #94a3b8;
 }

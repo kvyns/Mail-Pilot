@@ -170,8 +170,8 @@ const Campaigns = () => {
               ))}
             </select>
           </div>
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-900">
+          <div className="p-4 bg-primary-50 rounded-lg">
+            <p className="text-sm text-primary-900">
               This campaign will be sent to {users.length} users and will cost {users.length} credits.
             </p>
           </div>

@@ -44,7 +44,7 @@ const Input = ({
           className={`
             block w-full rounded-lg border 
             ${icon ? 'pl-10' : 'pl-3'} ${isPasswordField ? 'pr-10' : 'pr-3'} py-2
-            ${error ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-slate-300 focus:ring-blue-500 focus:border-blue-500'}
+            ${error ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-slate-300 focus:ring-primary-500 focus:border-primary-500'}
             ${disabled ? 'bg-slate-100 cursor-not-allowed' : 'bg-white'}
             text-slate-900 placeholder-slate-400
             focus:outline-none focus:ring-2

@@ -268,19 +268,19 @@ const SortableBlock = ({ block, onEdit, onDelete, onUpdate, isEditing }) => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => onUpdate({ ...block, align: 'justify-start' })}
-                  className={`p-3 border rounded-lg ${block.align === 'justify-start' ? 'bg-blue-100 border-blue-500' : ''}`}
+                  className={`p-3 border rounded-lg ${block.align === 'justify-start' ? 'bg-primary-100 border-primary-500' : ''}`}
                 >
                   <AlignLeft className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => onUpdate({ ...block, align: 'justify-center' })}
-                  className={`p-3 border rounded-lg ${block.align === 'justify-center' ? 'bg-blue-100 border-blue-500' : ''}`}
+                  className={`p-3 border rounded-lg ${block.align === 'justify-center' ? 'bg-primary-100 border-primary-500' : ''}`}
                 >
                   <AlignCenter className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => onUpdate({ ...block, align: 'justify-end' })}
-                  className={`p-3 border rounded-lg ${block.align === 'justify-end' ? 'bg-blue-100 border-blue-500' : ''}`}
+                  className={`p-3 border rounded-lg ${block.align === 'justify-end' ? 'bg-primary-100 border-primary-500' : ''}`}
                 >
                   <AlignRight className="w-5 h-5" />
                 </button>
@@ -326,19 +326,19 @@ const SortableBlock = ({ block, onEdit, onDelete, onUpdate, isEditing }) => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => onUpdate({ ...block, align: 'justify-start' })}
-                  className={`p-3 border rounded-lg ${block.align === 'justify-start' ? 'bg-blue-100 border-blue-500' : ''}`}
+                  className={`p-3 border rounded-lg ${block.align === 'justify-start' ? 'bg-primary-100 border-primary-500' : ''}`}
                 >
                   <AlignLeft className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => onUpdate({ ...block, align: 'justify-center' })}
-                  className={`p-3 border rounded-lg ${block.align === 'justify-center' ? 'bg-blue-100 border-blue-500' : ''}`}
+                  className={`p-3 border rounded-lg ${block.align === 'justify-center' ? 'bg-primary-100 border-primary-500' : ''}`}
                 >
                   <AlignCenter className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => onUpdate({ ...block, align: 'justify-end' })}
-                  className={`p-3 border rounded-lg ${block.align === 'justify-end' ? 'bg-blue-100 border-blue-500' : ''}`}
+                  className={`p-3 border rounded-lg ${block.align === 'justify-end' ? 'bg-primary-100 border-primary-500' : ''}`}
                 >
                   <AlignRight className="w-5 h-5" />
                 </button>
@@ -400,7 +400,7 @@ const SortableBlock = ({ block, onEdit, onDelete, onUpdate, isEditing }) => {
   };
   
   return (
-    <div ref={setNodeRef} style={style} className={`bg-white border-2 rounded-lg p-4 mb-3 transition-colors ${isEditing ? 'border-blue-500' : 'hover:border-blue-500'}`}>
+    <div ref={setNodeRef} style={style} className={`bg-white border-2 rounded-lg p-4 mb-3 transition-colors ${isEditing ? 'border-primary-500' : 'hover:border-primary-500'}`}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center space-x-2">
           <button {...attributes} {...listeners} className="cursor-grab hover:bg-slate-100 p-1.5 rounded">
@@ -546,35 +546,35 @@ const EnhancedEmailBuilder = ({ initialBlocks = [], onChange }) => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           <button
             onClick={() => addBlock('text')}
-            className="p-4 border-2 border-dashed rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-center"
+            className="p-4 border-2 border-dashed rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors text-center"
           >
             <Type className="w-6 h-6 mx-auto mb-2 text-slate-600" />
             <span className="text-sm font-medium">Text</span>
           </button>
           <button
             onClick={() => addBlock('image')}
-            className="p-4 border-2 border-dashed rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-center"
+            className="p-4 border-2 border-dashed rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors text-center"
           >
             <ImageIcon className="w-6 h-6 mx-auto mb-2 text-slate-600" />
             <span className="text-sm font-medium">Image</span>
           </button>
           <button
             onClick={() => addBlock('button')}
-            className="p-4 border-2 border-dashed rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-center"
+            className="p-4 border-2 border-dashed rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors text-center"
           >
             <MousePointer className="w-6 h-6 mx-auto mb-2 text-slate-600" />
             <span className="text-sm font-medium">Button</span>
           </button>
           <button
             onClick={() => addBlock('divider')}
-            className="p-4 border-2 border-dashed rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-center"
+            className="p-4 border-2 border-dashed rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors text-center"
           >
             <Minus className="w-6 h-6 mx-auto mb-2 text-slate-600" />
             <span className="text-sm font-medium">Divider</span>
           </button>
           <button
             onClick={() => addBlock('spacer')}
-            className="p-4 border-2 border-dashed rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-center"
+            className="p-4 border-2 border-dashed rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors text-center"
           >
             <Space className="w-6 h-6 mx-auto mb-2 text-slate-600" />
             <span className="text-sm font-medium">Spacer</span>

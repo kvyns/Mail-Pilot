@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { authAPI } from '../../api';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
+import PhoneInput from '../../components/common/PhoneInput';
 import { isValidEmail, validatePassword } from '../../utils/validators';
 import { 
   ClipboardCheck, 
@@ -64,8 +65,8 @@ const Register = () => {
     
     if (!formData.mobile.trim()) {
       newErrors.mobile = 'Mobile number is required';
-    } else if (!/^\+?[\d\s-()]+$/.test(formData.mobile)) {
-      newErrors.mobile = 'Invalid mobile number';
+    } else if (!formData.mobile.startsWith('+')) {
+      newErrors.mobile = 'Invalid mobile number format';
     }
     
     const passwordValidation = validatePassword(formData.password);
@@ -232,13 +233,13 @@ const Register = () => {
               <div className="flex flex-col items-center relative z-10">
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   currentStep >= step.number 
-                    ? 'bg-blue-600 text-white shadow-lg' 
+                    ? 'bg-primary-600 text-white shadow-lg' 
                     : 'bg-slate-200 text-slate-500'
                 }`}>
                   {step.icon}
                 </div>
                 <span className={`text-xs mt-2 font-medium ${
-                  currentStep >= step.number ? 'text-blue-600' : 'text-slate-500'
+                  currentStep >= step.number ? 'text-primary-600' : 'text-slate-500'
                 }`}>
                   {step.label}
                 </span>
@@ -246,7 +247,7 @@ const Register = () => {
               {index < steps.length - 1 && (
                 <div className="flex-1 h-1 mx-2 relative top-[-20px]">
                   <div className={`h-full rounded transition-all ${
-                    currentStep > step.number ? 'bg-blue-600' : 'bg-slate-200'
+                    currentStep > step.number ? 'bg-primary-600' : 'bg-slate-200'
                   }`} />
                 </div>
               )}
@@ -283,14 +284,13 @@ const Register = () => {
         placeholder="john@example.com"
       />
 
-      <Input
+      <PhoneInput
         label="Mobile Number"
-        type="tel"
         name="mobile"
         value={formData.mobile}
         onChange={handleChange}
         error={errors.mobile}
-        placeholder="+1 234 567 8900"
+        required
       />
 
       <Input
@@ -328,8 +328,8 @@ const Register = () => {
   const renderStep2 = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Mail className="w-10 h-10 text-blue-600" />
+        <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Mail className="w-10 h-10 text-primary-600" />
         </div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Verify Your Email</h2>
         <p className="text-slate-600">
@@ -338,8 +338,8 @@ const Register = () => {
         </p>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-sm text-blue-800">
+      <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+        <p className="text-sm text-primary-800">
           <strong>For demo purposes:</strong> Use any 6-digit code (e.g., 123456)
         </p>
       </div>
@@ -356,7 +356,7 @@ const Register = () => {
       />
 
       <div className="text-center">
-        <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+        <button className="text-primary-600 hover:text-primary-700 text-sm font-medium">
           Resend verification code
         </button>
       </div>
@@ -385,8 +385,8 @@ const Register = () => {
   const renderStep3 = () => (
     <div className="space-y-4">
       <div className="text-center mb-4">
-        <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Briefcase className="w-10 h-10 text-blue-600" />
+        <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Briefcase className="w-10 h-10 text-primary-600" />
         </div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Business Details</h2>
         <p className="text-slate-600">Tell us about your business</p>
@@ -407,7 +407,7 @@ const Register = () => {
           name="businessType"
           value={formData.businessType}
           onChange={handleChange}
-          className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+          className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
             errors.businessType ? 'border-red-500' : 'border-slate-300'
           }`}
         >
@@ -427,7 +427,7 @@ const Register = () => {
           name="companySize"
           value={formData.companySize}
           onChange={handleChange}
-          className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+          className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
             errors.companySize ? 'border-red-500' : 'border-slate-300'
           }`}
         >
@@ -448,7 +448,7 @@ const Register = () => {
           name="industry"
           value={formData.industry}
           onChange={handleChange}
-          className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+          className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
             errors.industry ? 'border-red-500' : 'border-slate-300'
           }`}
         >
@@ -494,11 +494,11 @@ const Register = () => {
       <p className="text-slate-600 mb-4">
         Your account has been successfully created.
       </p>
-      <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold mb-6">
+      <div className="inline-flex items-center space-x-2 px-4 py-2 bg-primary-100 text-primary-700 rounded-lg font-semibold mb-6">
         <Briefcase className="w-5 h-5" />
         <span>Super Admin Role Assigned</span>
       </div>
-      <div className="flex items-center justify-center space-x-2 text-blue-600 mt-4">
+      <div className="flex items-center justify-center space-x-2 text-primary-600 mt-4">
         <Laptop className="w-5 h-5 animate-pulse" />
         <span className="font-medium">Setting up your workspace...</span>
       </div>
@@ -506,12 +506,12 @@ const Register = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
-            <Plane className="w-10 h-10 text-blue-600" />
+            <img src="/mail-pilot-logo.png" alt="Mail Pilot Logo" className="w-12 h-12" />
             <span className="text-3xl font-bold text-slate-900">Mail Pilot</span>
           </Link>
         </div>
@@ -553,7 +553,7 @@ const Register = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-slate-600">
                 Already have an account?{' '}
-                <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+                <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
                   Sign In
                 </Link>
               </p>

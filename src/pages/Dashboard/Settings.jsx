@@ -118,7 +118,7 @@ const Settings = () => {
                 type="checkbox"
                 checked={preferences.emailNotifications}
                 onChange={(e) => setPreferences({ ...preferences, emailNotifications: e.target.checked })}
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
               />
               <div>
                 <div className="font-medium text-slate-900">Email Notifications</div>
@@ -131,7 +131,7 @@ const Settings = () => {
                 type="checkbox"
                 checked={preferences.campaignReports}
                 onChange={(e) => setPreferences({ ...preferences, campaignReports: e.target.checked })}
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
               />
               <div>
                 <div className="font-medium text-slate-900">Campaign Reports</div>
@@ -144,7 +144,7 @@ const Settings = () => {
                 type="checkbox"
                 checked={preferences.weeklyDigest}
                 onChange={(e) => setPreferences({ ...preferences, weeklyDigest: e.target.checked })}
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
               />
               <div>
                 <div className="font-medium text-slate-900">Weekly Digest</div>

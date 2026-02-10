@@ -76,12 +76,12 @@ const Login = () => {
   };
   
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-primary-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
-            <span className="text-4xl">✈️</span>
+            <img src="/mail-pilot-logo.png" alt="Mail Pilot Logo" className="w-12 h-12" />
             <span className="text-3xl font-bold text-gray-900">Mail Pilot</span>
           </Link>
         </div>
@@ -92,10 +92,10 @@ const Login = () => {
           <p className="text-gray-600 mb-6">Sign in to your account to continue</p>
           
           {/* Demo Credentials */}
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm font-semibold text-blue-900 mb-1">Demo Credentials:</p>
-            <p className="text-sm text-blue-800">Email: demo@mailpilot.com</p>
-            <p className="text-sm text-blue-800">Password: demo123</p>
+          <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
+            <p className="text-sm font-semibold text-primary-900 mb-1">Demo Credentials:</p>
+            <p className="text-sm text-primary-800">Email: demo@mailpilot.com</p>
+            <p className="text-sm text-primary-800">Password: demo123</p>
           </div>
           
           {authError && (
@@ -128,7 +128,7 @@ const Login = () => {
             />
             
             <div className="flex items-center justify-end">
-              <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+              <Link to="/forgot-password" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
                 Forgot password?
               </Link>
             </div>
@@ -146,7 +146,7 @@ const Login = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium">
+              <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
                 Sign up
               </Link>
             </p>

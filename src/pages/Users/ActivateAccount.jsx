@@ -136,7 +136,7 @@ const ActivateAccount = () => {
       case 'super-admin':
         return { icon: Shield, color: 'text-purple-600', bgColor: 'bg-purple-100' };
       case 'account-admin':
-        return { icon: Shield, color: 'text-blue-600', bgColor: 'bg-blue-100' };
+        return { icon: Shield, color: 'text-primary-600', bgColor: 'bg-primary-100' };
       case 'read-only':
         return { icon: Eye, color: 'text-gray-600', bgColor: 'bg-gray-100' };
       default:
@@ -164,12 +164,12 @@ const ActivateAccount = () => {
 
       {/* Invitation Info */}
       {invitationDetails && (
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800 mb-2">
+        <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
+          <p className="text-sm text-primary-800 mb-2">
             <span className="font-semibold">You've been invited to:</span>
           </p>
-          <p className="font-semibold text-blue-900">{invitationDetails.businessName}</p>
-          <p className="text-sm text-blue-700">
+          <p className="font-semibold text-primary-900">{invitationDetails.businessName}</p>
+          <p className="text-sm text-primary-700">
             Role: {getRoleName(invitationDetails.role)}
           </p>
         </div>
@@ -298,7 +298,7 @@ const ActivateAccount = () => {
           <RoleIcon className="w-5 h-5" />
           <span>{getRoleName(invitationDetails?.role)} Access Granted</span>
         </div>
-        <div className="flex items-center justify-center space-x-2 text-blue-600">
+        <div className="flex items-center justify-center space-x-2 text-primary-600">
           <Plane className="w-5 h-5 animate-pulse" />
           <span className="font-medium">Redirecting to dashboard...</span>
         </div>
@@ -307,12 +307,12 @@ const ActivateAccount = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
-            <Plane className="w-10 h-10 text-blue-600" />
+            <img src="/mail-pilot-logo.png" alt="Mail Pilot Logo" className="w-12 h-12" />
             <span className="text-3xl font-bold text-gray-900">Mail Pilot</span>
           </Link>
         </div>
@@ -324,13 +324,13 @@ const ActivateAccount = () => {
             <div className="flex items-center justify-center mb-8">
               <div className="flex items-center space-x-2">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-400'
+                  currentStep >= 1 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-400'
                 }`}>
                   1
                 </div>
-                <div className={`w-16 h-1 ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-200'}`} />
+                <div className={`w-16 h-1 ${currentStep >= 2 ? 'bg-primary-600' : 'bg-gray-200'}`} />
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-400'
+                  currentStep >= 2 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-400'
                 }`}>
                   2
                 </div>

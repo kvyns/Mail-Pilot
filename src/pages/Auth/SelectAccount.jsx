@@ -37,12 +37,12 @@ const SelectAccount = () => {
   };
   
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-primary-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-2">
-            <span className="text-4xl">✈️</span>
+            <img src="/mail-pilot-logo.png" alt="Mail Pilot Logo" className="w-12 h-12" />
             <span className="text-3xl font-bold text-gray-900">Mail Pilot</span>
           </div>
         </div>
@@ -66,8 +66,8 @@ const SelectAccount = () => {
                 disabled={isLoading}
                 className={`w-full p-4 rounded-lg border-2 transition-all text-left group ${
                   selectedAccountId === account.id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-gray-200 hover:border-primary-300 hover:bg-primary-50/50'
                 } ${isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 <div className="flex items-center justify-between">
@@ -75,8 +75,8 @@ const SelectAccount = () => {
                     {/* Icon */}
                     <div className={`p-2 rounded-lg ${
                       selectedAccountId === account.id
-                        ? 'bg-blue-100 text-blue-600'
-                        : 'bg-gray-100 text-gray-600 group-hover:bg-blue-100 group-hover:text-blue-600'
+                        ? 'bg-primary-100 text-primary-600'
+                        : 'bg-gray-100 text-gray-600 group-hover:bg-primary-100 group-hover:text-primary-600'
                     }`}>
                       <Building2 className="w-5 h-5" />
                     </div>
@@ -97,10 +97,10 @@ const SelectAccount = () => {
                   
                   {/* Arrow */}
                   <div className={`ml-2 ${
-                    selectedAccountId === account.id ? 'text-blue-600' : 'text-gray-400'
+                    selectedAccountId === account.id ? 'text-primary-600' : 'text-gray-400'
                   }`}>
                     {isLoading && selectedAccountId === account.id ? (
-                      <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <ChevronRight className="w-5 h-5" />
                     )}
@@ -123,8 +123,8 @@ const SelectAccount = () => {
         </div>
         
         {/* Info Box */}
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
+        <div className="mt-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
+          <p className="text-sm text-primary-800">
             <span className="font-semibold">💡 Tip:</span> You can switch between accounts anytime from the dashboard settings.
           </p>
         </div>

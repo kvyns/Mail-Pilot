@@ -35,7 +35,7 @@ const Credits = () => {
   return (
     <DashboardLayout title="Credits">
       <div className="grid lg:grid-cols-3 gap-6 mb-6">
-        <Card className="bg-linear-to-br from-blue-500 to-blue-700 text-white">
+        <Card className="bg-linear-to-br from-primary-500 to-primary-700 text-white">
           <div className="text-center">
             <p className="text-sm opacity-90 mb-2">Available Credits</p>
             <p className="text-4xl font-bold mb-2">{balance.toLocaleString()}</p>
@@ -66,11 +66,11 @@ const Credits = () => {
             <div
               key={pkg.amount}
               className={`border-2 rounded-lg p-6 text-center transition-all hover:shadow-lg ${
-                pkg.popular ? 'border-blue-500 bg-blue-50' : 'border-slate-200'
+                pkg.popular ? 'border-primary-500 bg-primary-50' : 'border-slate-200'
               }`}
             >
               {pkg.popular && (
-                <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full mb-2">
+                <span className="inline-block px-3 py-1 bg-primary-600 text-white text-xs font-semibold rounded-full mb-2">
                   Popular
                 </span>
               )}
@@ -150,13 +150,13 @@ const Credits = () => {
         }
       >
         <div className="text-center py-6">
-          <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-20 h-20 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <CreditCard className="w-10 h-10 text-white" />
           </div>
           <h3 className="text-2xl font-bold text-slate-900 mb-2">
             {purchaseAmount.toLocaleString()} Credits
           </h3>
-          <p className="text-3xl font-bold text-blue-600 mb-6">
+          <p className="text-3xl font-bold text-primary-600 mb-6">
             ${(purchaseAmount / 100).toFixed(2)}
           </p>
           <p className="text-slate-600">

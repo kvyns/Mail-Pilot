@@ -40,8 +40,8 @@ const InviteUser = () => {
       name: 'Account Admin',
       description: 'Manage users, campaigns, and account settings',
       icon: User,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-100',
     },
     {
       id: 'read-only',
@@ -148,8 +148,8 @@ const InviteUser = () => {
                   onClick={() => selectRole(role.id)}
                   className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
                     formData.role === role.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'
+                      ? 'border-primary-500 bg-primary-50'
+                      : 'border-gray-200 hover:border-primary-300 hover:bg-primary-50/50'
                   }`}
                 >
                   <div className="flex items-start space-x-3">
@@ -165,7 +165,7 @@ const InviteUser = () => {
                       <p className="text-sm text-gray-600">{role.description}</p>
                     </div>
                     {formData.role === role.id && (
-                      <CheckCircle className="w-5 h-5 text-blue-600" />
+                      <CheckCircle className="w-5 h-5 text-primary-600" />
                     )}
                   </div>
                 </button>
@@ -217,7 +217,7 @@ const InviteUser = () => {
         </p>
 
         {/* Invitation Details */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6 text-left">
+        <div className="bg-primary-50 border border-primary-200 rounded-lg p-6 mb-6 text-left">
           <div className="flex items-center space-x-3 mb-4">
             <div className={`p-2 rounded-lg ${selectedRole?.bgColor} ${selectedRole?.color}`}>
               {IconComponent && <IconComponent className="w-5 h-5" />}
@@ -227,7 +227,7 @@ const InviteUser = () => {
               <p className="font-semibold text-gray-900">{selectedRole?.name}</p>
             </div>
           </div>
-          <div className="text-sm text-blue-800">
+          <div className="text-sm text-primary-800">
             <p className="mb-2">
               <span className="font-semibold">📧 Next Steps:</span>
             </p>
@@ -264,12 +264,12 @@ const InviteUser = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-2">
-            <span className="text-4xl">✈️</span>
+            <img src="/mail-pilot-logo.png" alt="Mail Pilot Logo" className="w-12 h-12" />
             <span className="text-3xl font-bold text-gray-900">Mail Pilot</span>
           </div>
         </div>
