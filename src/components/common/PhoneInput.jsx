@@ -85,11 +85,16 @@ const PhoneInput = ({
 
   // Parse initial value if provided
   useEffect(() => {
-    if (value && value.startsWith('+')) {
+    if (value && typeof value === 'string' && value.startsWith('+')) {
       const matchedCode = COUNTRY_CODES.find(cc => value.startsWith(cc.code));
       if (matchedCode) {
         setCountryCode(matchedCode.code);
-        setPhoneNumber(value.substring(matchedCode.code.length).trim());
+        let phoneNum = value.substring(matchedCode.code.length).trim();
+        // Remove leading 0 if present
+        if (phoneNum.startsWith('0')) {
+          phoneNum = phoneNum.substring(1);
+        }
+        setPhoneNumber(phoneNum);
       }
     }
   }, [value]);
@@ -97,17 +102,31 @@ const PhoneInput = ({
   const handleCountryCodeChange = (newCode) => {
     setCountryCode(newCode);
     setIsOpen(false);
-    // Trigger parent onChange with new complete number
-    const completeNumber = `${newCode}${phoneNumber}`;
-    onChange({ target: { name, value: completeNumber } });
+    // Trigger parent onChange with both country code and phone number
+    onChange({ 
+      target: { 
+        name, 
+        value: { countryCode: newCode, mobileNumber: phoneNumber }
+      } 
+    });
   };
 
   const handlePhoneNumberChange = (e) => {
-    const newNumber = e.target.value.replace(/\D/g, ''); // Only digits
+    let newNumber = e.target.value.replace(/\D/g, ''); // Only digits
+    
+    // Remove leading 0 if present (common in UK numbers)
+    if (newNumber.startsWith('0')) {
+      newNumber = newNumber.substring(1);
+    }
+    
     setPhoneNumber(newNumber);
-    // Trigger parent onChange with complete number
-    const completeNumber = `${countryCode}${newNumber}`;
-    onChange({ target: { name, value: completeNumber } });
+    // Trigger parent onChange with both country code and phone number
+    onChange({ 
+      target: { 
+        name, 
+        value: { countryCode: countryCode, mobileNumber: newNumber }
+      } 
+    });
   };
 
   const selectedCountry = COUNTRY_CODES.find(cc => cc.code === countryCode && cc.country);
@@ -176,7 +195,7 @@ const PhoneInput = ({
           name={name}
           value={phoneNumber}
           onChange={handlePhoneNumberChange}
-          placeholder={selectedCountry ? `${selectedCountry.minLength} digits` : 'Enter phone number'}
+          placeholder={selectedCountry ? `${selectedCountry.minLength} digits (with or without 0)` : 'Enter phone number'}
           disabled={disabled}
           required={required}
           className={`
@@ -198,6 +217,11 @@ const PhoneInput = ({
           {phoneLength < selectedCountry.minLength 
             ? `Enter at least ${selectedCountry.minLength} digits`
             : `Maximum ${selectedCountry.maxLength} digits allowed`}
+        </p>
+      )}
+      {!error && !showValidation && (
+        <p className="mt-1 text-xs text-slate-500">
+          Enter with or without leading 0 (e.g., 7501873305 or 07501873305)
         </p>
       )}
       {!error && showValidation && isValid && (

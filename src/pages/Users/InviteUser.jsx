@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usersAPI } from '../../api';
 import Button from '../../components/common/Button';
@@ -25,6 +25,17 @@ const InviteUser = () => {
   });
   const [errors, setErrors] = useState({});
   const [invitationResult, setInvitationResult] = useState(null);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (!token || token.split('.').length !== 3) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      localStorage.removeItem('selectedAccount');
+      navigate('/login', { state: { message: 'Please login to invite users' } });
+    }
+  }, [navigate]);
 
   const roles = [
     {
@@ -93,6 +104,7 @@ const InviteUser = () => {
       const response = await usersAPI.invite({
         email: formData.email,
         role: formData.role,
+        roleID: formData.role,
       });
       
       setInvitationResult(response.data);

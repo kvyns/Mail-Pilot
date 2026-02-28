@@ -14,6 +14,7 @@ export { usersAPI } from './users.api';
 export { templatesAPI } from './templates.api';
 export { campaignsAPI } from './campaigns.api';
 export { creditsAPI } from './credits.api';
-export { uploadAPI } from './upload.api';
+export { uploadAPI, UPLOAD_CATEGORIES } from './upload.api';
+export { paymentAPI } from './payment.api';
 export { API_ENDPOINTS, API_CONFIG } from './config';
 export { default as apiClient } from './apiClient';

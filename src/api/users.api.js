@@ -131,8 +131,28 @@ export const usersAPI = {
         },
       };
     }
-    
-    return apiClient.post(API_ENDPOINTS.USERS_INVITE, inviteData);
+
+    // Resolve accountID and addedBy from localStorage
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const selectedAccount = JSON.parse(localStorage.getItem('selectedAccount') || 'null') || {};
+    const accountID =
+      user?.accountID || user?.accountId ||
+      selectedAccount?.accountID || selectedAccount?.id || selectedAccount?._id;
+
+    // addedBy is an object per spec note [3]: { email, firstName, lastName }
+    const addedBy = {
+      email:     user?.email     || '',
+      firstName: user?.firstName || '',
+      lastName:  user?.lastName  || '',
+    };
+
+    return apiClient.post(API_ENDPOINTS.USERS_INVITE, {
+      accountID,
+      email:     inviteData.email,
+      roleID:    inviteData.roleID || inviteData.role,
+      roleTitle: inviteData.roleTitle || inviteData.role,
+      addedBy,
+    });
   },
 
   // Activate invited user

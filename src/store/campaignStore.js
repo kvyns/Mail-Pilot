@@ -13,8 +13,9 @@ export const useCampaignStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await campaignsAPI.getAll(params);
+      const data = response?.data ?? response ?? [];
       set({
-        campaigns: response.data,
+        campaigns: Array.isArray(data) ? data : [],
         isLoading: false,
       });
     } catch (error) {

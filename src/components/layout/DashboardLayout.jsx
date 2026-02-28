@@ -4,13 +4,11 @@ import Navbar from './Navbar';
 
 const DashboardLayout = ({ children, title }) => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <Sidebar />
-      
-      <div className="ml-64">
+      <div className="ml-64 flex flex-col min-h-screen">
         <Navbar title={title} />
-        
-        <main className="p-6">
+        <main className="flex-1 p-6 lg:p-8">
           {children}
         </main>
       </div>

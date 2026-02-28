@@ -17,6 +17,12 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/upload-api/, ''),
         secure: true,
+      },
+      '/payment-api': {
+        target: 'https://nfmv69lv4j.execute-api.eu-west-2.amazonaws.com/prod/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/payment-api/, ''),
+        secure: true,
       }
     }
   }

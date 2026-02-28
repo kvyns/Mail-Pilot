@@ -1,5 +1,24 @@
 import apiClient from './apiClient';
-import { API_ENDPOINTS } from './config';
+import axios from 'axios';
+import { API_CONFIG, API_ENDPOINTS } from './config';
+
+// Public client — no Authorization header (used for No Auth Header endpoints)
+const publicApiClient = axios.create({
+  baseURL: API_CONFIG.BASE_URL,
+  timeout: API_CONFIG.TIMEOUT,
+  headers: API_CONFIG.HEADERS,
+});
+publicApiClient.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    const msg =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.message ||
+      'An error occurred';
+    return Promise.reject(new Error(msg));
+  }
+);
 
 // Mock mode - set to false when backend is ready
 const MOCK_MODE = false;
@@ -72,9 +91,10 @@ export const authAPI = {
     }
     
     return apiClient.post(API_ENDPOINTS.REGISTER, {
-      name: userData.name,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
       email: userData.email,
-      mobile: userData.mobile,
+      mobileNumber: userData.mobileNumber,
       password: userData.password,
     });
   },
@@ -112,12 +132,19 @@ export const authAPI = {
       };
     }
     
-    return apiClient.post(API_ENDPOINTS.BUSINESS_ADD, {
+    return publicApiClient.post(API_ENDPOINTS.BUSINESS_ADD, {
       email: businessData.email,
-      businessName: businessData.businessName,
-      businessType: businessData.businessType,
-      companySize: businessData.companySize,
-      industry: businessData.industry,
+      account: {
+        email:       businessData.businessEmail || '',
+        name:        businessData.businessName  || '',
+        phone:       businessData.businessPhone || '',
+        website:     businessData.website       || '',
+        x:           businessData.x             || '',
+        facebook:    businessData.facebook      || '',
+        instagram:   businessData.instagram     || '',
+        tiktok:      businessData.tiktok        || '',
+        tripadviser: businessData.tripadviser   || '',
+      },
     });
   },
 
@@ -145,34 +172,15 @@ export const authAPI = {
     return apiClient.post(API_ENDPOINTS.REFRESH_TOKEN);
   },
 
-  // Validate Token
-  validateToken: async (token) => {
-    if (MOCK_MODE) {
-      await mockDelay(200);
-      return {
-        success: true,
-        data: {
-          valid: true,
-          user: mockUser,
-        },
-      };
-    }
-    
-    return apiClient.get(API_ENDPOINTS.VALIDATE_TOKEN, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  // Validate Token — GET /validate/token Bearer Token
+  // Response: { tokenExpired: false }
+  validateToken: async () => {
+    return apiClient.get(API_ENDPOINTS.VALIDATE_TOKEN);
   },
 
-  // Get User Profile
+  // Get User Profile — GET /user Bearer Token
+  // Response: { user: { email, firstName, lastName, ... } }
   getUserProfile: async () => {
-    if (MOCK_MODE) {
-      await mockDelay(300);
-      return {
-        success: true,
-        data: mockUser,
-      };
-    }
-    
     return apiClient.get(API_ENDPOINTS.USER_PROFILE);
   },
 
@@ -230,5 +238,35 @@ export const authAPI = {
       code: resetData.code,
       newPassword: resetData.newPassword,
     });
+  },
+
+  // Get Business Account details
+  // GET /business/account  No Auth  Query: accountID
+  getBusinessAccount: async (accountID) => {
+    if (MOCK_MODE) {
+      await mockDelay();
+      return { success: true, data: {} };
+    }
+    return publicApiClient.get(API_ENDPOINTS.BUSINESS_ACCOUNT, { params: { accountID } });
+  },
+
+  // Get all accounts linked to an email address
+  // GET /user/accounts  No Auth  Query: email
+  getUserAccounts: async (email) => {
+    if (MOCK_MODE) {
+      await mockDelay();
+      return { success: true, data: [] };
+    }
+    return publicApiClient.get(API_ENDPOINTS.USER_ACCOUNTS, { params: { email } });
+  },
+
+  // Get a user's access/role for a specific account
+  // GET /user/access  No Auth  Query: email, accountID
+  getUserAccess: async (email, accountID) => {
+    if (MOCK_MODE) {
+      await mockDelay();
+      return { success: true, data: {} };
+    }
+    return publicApiClient.get(API_ENDPOINTS.USER_ACCESS, { params: { email, accountID } });
   },
 };

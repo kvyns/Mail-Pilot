@@ -1,8 +1,24 @@
-import apiClient from './apiClient';
-import { API_ENDPOINTS } from './config';
+import axios from 'axios';
+import { API_CONFIG, API_ENDPOINTS } from './config';
 
 const MOCK_MODE = false;
 const mockDelay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Separate client for the upload server (which holds credits/transaction data)
+const uploadClient = axios.create({
+  baseURL: API_CONFIG.UPLOAD_BASE_URL,
+  timeout: API_CONFIG.TIMEOUT,
+  headers: API_CONFIG.HEADERS,
+});
+uploadClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+uploadClient.interceptors.response.use(
+  (res) => res.data,
+  (err) => { throw err.response?.data ?? err; }
+);
 
 // Mock credits data
 let mockCredits = {
@@ -20,37 +36,26 @@ let mockHistory = [
 ];
 
 export const creditsAPI = {
-  // Get credit balance
-  getBalance: async () => {
+  // Get credit balance — upload server owns credits/transaction data
+  getBalance: async (accountID) => {
     if (MOCK_MODE) {
       await mockDelay();
-      return {
-        success: true,
-        data: mockCredits,
-      };
+      return { success: true, data: mockCredits };
     }
-    
-    return apiClient.get(API_ENDPOINTS.CREDITS);
+    const params = {};
+    if (accountID) params.accountID = accountID;
+    return uploadClient.get(API_ENDPOINTS.CREDITS, { params });
   },
 
-  // Get credit history
+  // Get credit/transaction history
   getHistory: async (params = {}) => {
     if (MOCK_MODE) {
       await mockDelay();
       let filtered = [...mockHistory];
-      
-      if (params.type) {
-        filtered = filtered.filter(h => h.type === params.type);
-      }
-      
-      return {
-        success: true,
-        data: filtered,
-        total: filtered.length,
-      };
+      if (params.type) filtered = filtered.filter(h => h.type === params.type);
+      return { success: true, data: filtered, total: filtered.length };
     }
-    
-    return apiClient.get(API_ENDPOINTS.CREDITS_HISTORY, { params });
+    return uploadClient.get(API_ENDPOINTS.TRANSACTIONS, { params });
   },
 
   // Purchase credits
@@ -108,6 +113,6 @@ export const creditsAPI = {
       };
     }
     
-    return apiClient.post(`${API_ENDPOINTS.CREDITS}/deduct`, { amount, description });
+    return uploadClient.post(`${API_ENDPOINTS.CREDITS}/deduct`, { amount, description });
   },
 };

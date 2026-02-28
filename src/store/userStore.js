@@ -16,8 +16,9 @@ export const useUserStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await usersAPI.getAll(params || get().filters);
+      const data = response?.data ?? response ?? [];
       set({
-        users: response.data,
+        users: Array.isArray(data) ? data : [],
         isLoading: false,
       });
     } catch (error) {

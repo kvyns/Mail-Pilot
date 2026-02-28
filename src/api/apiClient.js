@@ -13,6 +13,23 @@ apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
     if (token) {
+      // Validate token format (JWT should have 3 parts separated by dots)
+      const isValidJWT = token.split('.').length === 3;
+      
+      if (!isValidJWT) {
+        console.warn('Invalid token format detected. Clearing token...');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('selectedAccount');
+        
+        // Only redirect if not already on login/register pages
+        const currentPath = window.location.pathname;
+        if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
+          window.location.href = '/login';
+        }
+        return Promise.reject(new Error('Invalid authentication token. Please login again.'));
+      }
+      
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -47,12 +64,17 @@ apiClient.interceptors.response.use(
       
       switch (status) {
         case 401:
-          // Unauthorized - clear token and redirect to login
+          // Unauthorized - token expired or invalid, clear and redirect to login
+          console.error('Unauthorized:', errorMessage);
           localStorage.removeItem('authToken');
           localStorage.removeItem('user');
-          window.location.href = '/login';
+          localStorage.removeItem('selectedAccount');
+          if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
+            window.location.href = '/login';
+          }
           break;
         case 403:
+          // Forbidden - authenticated but no permission, do NOT clear token
           console.error('Forbidden:', errorMessage);
           break;
         case 404:
