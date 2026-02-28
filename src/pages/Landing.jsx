@@ -120,27 +120,27 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img src="/mail-pilot-logo.png" alt="Mail Pilot" className="w-9 h-9" />
-            <span className="text-xl font-bold text-slate-900">Mail Pilot</span>
+            <span className="text-xl font-bold text-primary-600">Mail Pilot</span>
           </div>
           <nav className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((l) => (
               <button key={l} onClick={() => scrollTo(l.toLowerCase().replace(/\s+/g, '-'))}
-                className="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">
+                className="text-sm font-medium text-slate-400 hover:text-primary-500 transition-colors">
                 {l}
               </button>
             ))}
           </nav>
           <div className="hidden md:flex items-center gap-3">
             <button onClick={() => navigate('/login')}
-              className="text-sm font-medium text-slate-700 hover:text-primary-600 transition-colors px-4 py-2">
+              className="text-sm font-medium text-slate-400 hover:text-primary-500 transition-colors px-4 py-2">
               Sign In
             </button>
             <button onClick={() => navigate('/register')}
-              className="text-sm font-semibold bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-lg transition-colors shadow-sm">
+              className="text-sm font-semibold bg-primary-500 hover:bg-primary-400 text-white px-5 py-2.5 rounded-lg transition-colors shadow-sm">
               Get Started Free
             </button>
           </div>
-          <button className="md:hidden p-2 text-slate-700" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button className="md:hidden p-2 text-slate-400 hover:text-primary-500 transition-colors" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
@@ -148,11 +148,11 @@ const Landing = () => {
           <div className="md:hidden bg-white border-t border-slate-200 px-6 py-4 space-y-3">
             {NAV_LINKS.map((l) => (
               <button key={l} onClick={() => scrollTo(l.toLowerCase().replace(/\s+/g, '-'))}
-                className="block w-full text-left text-sm font-medium text-slate-700 py-2">{l}</button>
+                className="block w-full text-left text-sm font-medium text-slate-400 hover:text-primary-500 transition-colors py-2">{l}</button>
             ))}
             <div className="flex gap-3 pt-2">
-              <button onClick={() => navigate('/login')} className="flex-1 text-sm font-medium border border-slate-300 text-slate-700 py-2.5 rounded-lg">Sign In</button>
-              <button onClick={() => navigate('/register')} className="flex-1 text-sm font-semibold bg-primary-600 text-white py-2.5 rounded-lg">Get Started</button>
+              <button onClick={() => navigate('/login')} className="flex-1 text-sm font-medium border border-slate-200 text-slate-400 hover:text-primary-500 hover:border-primary-300 transition-colors py-2.5 rounded-lg">Sign In</button>
+              <button onClick={() => navigate('/register')} className="flex-1 text-sm font-semibold bg-primary-500 hover:bg-primary-400 text-white py-2.5 rounded-lg transition-colors">Get Started</button>
             </div>
           </div>
         )}
