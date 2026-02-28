@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import EnhancedEmailBuilder from '../../components/dragDrop/EnhancedEmailBuilder';
+import EnhancedEmailBuilder, { EmailExport } from '../../components/dragDrop/EnhancedEmailBuilder';
 import { useTemplateStore } from '../../store/templateStore';
 import { uploadAPI } from '../../api/upload.api';
-import { Save, Eye, EyeOff, ArrowLeft, FileText, Copy, Check, Code, X, CheckCircle2 } from 'lucide-react';
+import { Save, Eye, EyeOff, ArrowLeft, FileText, Copy, Check, Code, X, CheckCircle2, Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 /* ─── Toast ──────────────────────────────────────────────── */
 const Toast = ({ toasts }) => (
@@ -112,30 +112,7 @@ const TemplateEditor = () => {
     }));
   };
 
-  /* ── HTML generator ── */
-  const generateHTMLFromBlocks = useCallback((blocks) => {
-    const renderBlock = (block) => {
-      if (block.type === 'text') return `  <div style="margin-bottom:16px;">${block.content}</div>\n`;
-      if (block.type === 'image') {
-        const align = block.align === 'justify-start' ? 'left' : block.align === 'justify-end' ? 'right' : 'center';
-        return `  <div style="text-align:${align};margin-bottom:16px;">\n    <img src="${block.content}" alt="${block.alt || 'Image'}" style="width:${block.width || 'auto'};max-width:100%;border-radius:8px;"/>\n  </div>\n`;
-      }
-      if (block.type === 'button') {
-        const align = block.align === 'justify-start' ? 'left' : block.align === 'justify-end' ? 'right' : 'center';
-        return `  <div style="text-align:${align};margin-bottom:16px;">\n    <a href="${block.link || '#'}" style="background-color:${block.bgColor || '#3b82f6'};color:${block.textColor || '#fff'};padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:600;">${block.content || 'Button'}</a>\n  </div>\n`;
-      }
-      if (block.type === 'divider') return `  <hr style="border:0;border-top:1px solid ${block.color || '#e5e7eb'};margin:24px 0;"/>\n`;
-      if (block.type === 'spacer') return `  <div style="height:${block.height || 20}px;"></div>\n`;
-      if (block.children?.length) return block.children.map(renderBlock).join('');
-      return '';
-    };
-    let html = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1.0">\n  <title>${template.subject || 'Email Template'}</title>\n  <style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;line-height:1.6;color:#333;max-width:600px;margin:0 auto;padding:20px;}img{max-width:100%;height:auto;}a{color:#3b82f6;text-decoration:none;}</style>\n</head>\n<body>\n`;
-    blocks.forEach(b => { html += renderBlock(b); });
-    html += `</body>\n</html>`;
-    return html;
-  }, [template.subject]);
-
-  const generateHTML = () => generateHTMLFromBlocks(template.schema.blocks || []);
+  /* ── HTML generator — delegates to EmailExport so View Code, Save and HtmlModal are always in sync ── */
 
   /* ── Save ── */
   const handleSave = async () => {
@@ -146,7 +123,7 @@ const TemplateEditor = () => {
       const templateID = id !== 'new' ? id : undefined;
       const resolvedBlocks = await prepareBlocks(template.schema.blocks || [], templateID);
       setSaveStage('Uploading HTML…');
-      const htmlString = generateHTMLFromBlocks(resolvedBlocks);
+      const htmlString = EmailExport.exportToHTML(resolvedBlocks);
       let htmlKey = template.htmlKey || null;
       try {
         const htmlRes = await uploadAPI.uploadHtmlString(htmlString, templateID);
@@ -194,15 +171,29 @@ const TemplateEditor = () => {
       );
       if (block.type === 'divider') return <hr key={block.id} style={{ borderColor: block.color || '#e5e7eb', margin: '24px 0' }} />;
       if (block.type === 'spacer') return <div key={block.id} style={{ height: `${block.height || 20}px` }} />;
-      if (block.type === 'social') return (
-        <div key={block.id} className={`flex gap-3 mb-4 ${block.align || 'justify-center'}`}>
-          {block.icons?.includes('facebook') && <a href={block.facebookUrl || '#'} className="w-9 h-9 rounded-full bg-[#1877f2] flex items-center justify-center text-white text-xs font-bold">f</a>}
-          {block.icons?.includes('twitter') && <a href={block.twitterUrl || '#'} className="w-9 h-9 rounded-full bg-[#1da1f2] flex items-center justify-center text-white text-xs font-bold">t</a>}
-          {block.icons?.includes('instagram') && <a href={block.instagramUrl || '#'} className="w-9 h-9 rounded-full bg-gradient-to-br from-[#833ab4] via-[#fd1d1d] to-[#fcb045] flex items-center justify-center text-white text-xs font-bold">in</a>}
-          {block.icons?.includes('linkedin') && <a href={block.linkedinUrl || '#'} className="w-9 h-9 rounded-full bg-[#0077b5] flex items-center justify-center text-white text-xs font-bold">li</a>}
-          {block.icons?.includes('youtube') && <a href={block.youtubeUrl || '#'} className="w-9 h-9 rounded-full bg-[#ff0000] flex items-center justify-center text-white text-xs font-bold">yt</a>}
-        </div>
-      );
+      if (block.type === 'social') {
+        const socialMeta = {
+          facebook:  { Icon: Facebook,  bg: '#1877f2',  url: block.facebookUrl  || '#' },
+          twitter:   { Icon: Twitter,   bg: '#1da1f2',  url: block.twitterUrl   || '#' },
+          instagram: { Icon: Instagram, bg: 'linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', url: block.instagramUrl || '#' },
+          linkedin:  { Icon: Linkedin,  bg: '#0a66c2',  url: block.linkedinUrl  || '#' },
+          youtube:   { Icon: Youtube,   bg: '#ff0000',  url: block.youtubeUrl   || '#' },
+        };
+        return (
+          <div key={block.id} className={`flex gap-3 mb-4 ${block.align || 'justify-center'}`}>
+            {block.icons?.map(platform => {
+              const meta = socialMeta[platform];
+              if (!meta) return null;
+              const { Icon, bg, url } = meta;
+              return (
+                <a key={platform} href={url} className="w-10 h-10 rounded-full flex items-center justify-center shadow-md" style={{ background: bg }}>
+                  <Icon className="w-5 h-5 text-white" />
+                </a>
+              );
+            })}
+          </div>
+        );
+      }
       if (block.type === 'columns') {
         const colCount = block.columnCount || 2;
         const cols = Array.from({ length: colCount }, () => []);
@@ -263,7 +254,7 @@ const TemplateEditor = () => {
   return (
     <DashboardLayout title={id === 'new' ? 'Create Template' : `Edit Template`}>
       <Toast toasts={toasts} />
-      {showHtmlModal && <HtmlModal html={generateHTML()} onClose={() => setShowHtmlModal(false)} />}
+      {showHtmlModal && <HtmlModal html={EmailExport.exportToHTML(template.schema.blocks || [])} onClose={() => setShowHtmlModal(false)} />}
 
       {/* Sticky Top Bar */}
       <div className="bg-white border border-slate-200 rounded-2xl shadow-sm px-5 py-4 mb-6 sticky top-4 z-10">

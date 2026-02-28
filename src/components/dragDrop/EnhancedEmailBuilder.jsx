@@ -294,13 +294,13 @@ const EmailExport = {
         <tr>
           <td align="${align}" style="padding:10px 0;">
             <!--[if mso]>
-            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${b.link}" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="${bgColor}">
+            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${b.link}" style="height:44px;v-text-anchor:middle;width:auto;" arcsize="18%" stroke="f" fillcolor="${bgColor}">
               <w:anchorlock/>
-              <center style="color:${textColor};font-family:sans-serif;font-size:16px;font-weight:bold;">${b.content}</center>
+              <center style="color:${textColor};font-family:sans-serif;font-size:16px;font-weight:bold;padding:0 24px;">${b.content}</center>
             </v:roundrect>
             <![endif]-->
             <!--[if !mso]><!-->
-            <a href="${b.link}" style="background-color:${bgColor};border-radius:4px;color:${textColor};display:inline-block;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;mso-hide:all;">${b.content}</a>
+            <a href="${b.link}" style="background-color:${bgColor};border-radius:8px;color:${textColor};display:inline-block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:16px;font-weight:600;padding:12px 24px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;mso-hide:all;">${b.content}</a>
             <!--<![endif]-->
           </td>
         </tr>`;
@@ -328,15 +328,37 @@ const EmailExport = {
       [BlockTypes.SOCIAL]: (b) => {
         const align = b.align?.replace('justify-', '') || 'center';
         const icons = b.icons || [];
+
+        const enc = (svg) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+        const brandMeta = {
+          facebook:  {
+            color: '#1877f2',
+            src: enc(`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="white"/></svg>`),
+          },
+          twitter:   {
+            color: '#1da1f2',
+            src: enc(`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" fill="white"/></svg>`),
+          },
+          instagram: {
+            color: '#e1306c',
+            gradient: 'background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);',
+            src: enc(`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`),
+          },
+          linkedin:  {
+            color: '#0a66c2',
+            src: enc(`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`),
+          },
+          youtube:   {
+            color: '#ff0000',
+            src: enc(`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>`),
+          },
+        };
+
         const iconHTML = icons.map(platform => {
-          const urls = {
-            facebook: b.facebookUrl || '#',
-            twitter: b.twitterUrl || '#',
-            instagram: b.instagramUrl || '#',
-            linkedin: b.linkedinUrl || '#',
-            youtube: b.youtubeUrl || '#'
-          };
-          return `<a href="${urls[platform]}" style="display:inline-block;margin:0 5px;"><img src="https://img.icons8.com/color/48/${platform}.png" alt="${platform}" width="32" height="32" style="display:block;" /></a>`;
+          const meta = brandMeta[platform];
+          if (!meta) return '';
+          const href = { facebook: b.facebookUrl, twitter: b.twitterUrl, instagram: b.instagramUrl, linkedin: b.linkedinUrl, youtube: b.youtubeUrl }[platform] || '#';
+          return `<a href="${href}" style="display:inline-block;margin:0 5px;text-decoration:none;border:0;" target="_blank"><table cellpadding="0" cellspacing="0" border="0" style="display:inline-table;"><tr><td width="40" height="40" align="center" valign="middle" bgcolor="${meta.color}" style="border-radius:20px;width:40px;height:40px;background-color:${meta.color};${meta.gradient || ''}"><img src="${meta.src}" width="22" height="22" alt="${platform}" style="display:block;border:0;outline:0;" /></td></tr></table></a>`;
         }).join('');
         
         return `
@@ -442,21 +464,18 @@ const EmailExport = {
     body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
     table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
     img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333333; }
     @media screen and (max-width: 600px) {
       .mobile-full-width { width: 100% !important; }
       .mobile-padding { padding: 10px !important; }
       .mobile-stack { display: block !important; width: 100% !important; }
     }
-    @media (prefers-color-scheme: dark) {
-      .dark-mode-bg { background-color: #1a1a1a !important; }
-      .dark-mode-text { color: #ffffff !important; }
-    }
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:#f4f4f4;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f4;">
+<body style="margin:0;padding:0;background-color:#ffffff;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;">
     <tr>
-      <td align="center" style="padding:20px 0;">
+      <td align="center">
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;max-width:600px;" class="mobile-full-width">
           ${bodyContent}
         </table>
@@ -467,6 +486,31 @@ const EmailExport = {
 </html>`;
   }
 };
+
+// ============================================
+// COLOR SWATCHES
+// ============================================
+
+const COLOR_SWATCHES = [
+  '#ffffff', '#f8fafc', '#e2e8f0', '#94a3b8', '#334155', '#1e293b',
+  '#ef4444', '#f97316', '#f59e0b', '#10b981', '#2bb5ad', '#3b82f6',
+  '#6366f1', '#8b5cf6', '#ec4899',
+];
+
+const ColorSwatches = ({ onChange }) => (
+  <div className="flex flex-wrap gap-1.5 mt-2">
+    {COLOR_SWATCHES.map(color => (
+      <button
+        key={color}
+        type="button"
+        title={color}
+        onClick={() => onChange(color)}
+        className="w-6 h-6 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform ring-1 ring-slate-200"
+        style={{ backgroundColor: color }}
+      />
+    ))}
+  </div>
+);
 
 // ============================================
 // RICH TEXT EDITOR COMPONENT
@@ -536,6 +580,19 @@ const RichTextEditor = ({ content, onChange }) => {
           <LinkIcon className="w-4 h-4" />
         </button>
         <input type="color" onChange={(e) => execCommand('foreColor', e.target.value)} className="w-8 h-8 rounded cursor-pointer" title="Text Color" />
+      </div>
+      <div className="bg-slate-50 border-b px-2 py-1.5 flex flex-wrap gap-1.5 items-center">
+        <span className="text-xs text-slate-400 font-medium mr-1">Text color:</span>
+        {COLOR_SWATCHES.map(color => (
+          <button
+            key={color}
+            type="button"
+            title={color}
+            onMouseDown={(e) => { e.preventDefault(); execCommand('foreColor', color); }}
+            className="w-5 h-5 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform ring-1 ring-slate-200"
+            style={{ backgroundColor: color }}
+          />
+        ))}
       </div>
       <div ref={editorRef} contentEditable onInput={handleInput} className="p-4 min-h-[150px] focus:outline-none prose max-w-none" />
       <Modal isOpen={showLinkModal} onClose={() => setShowLinkModal(false)} title="Insert Link"
@@ -757,15 +814,29 @@ const NestedBlock = ({
         );
       
       case BlockTypes.SOCIAL:
-        return (
-          <div className={`flex gap-2 ${block.align || 'justify-center'}`}>
-            {block.icons?.map(icon => (
-              <div key={icon} className="w-8 h-8 rounded-full bg-slate-300 flex items-center justify-center">
-                <span className="text-xs">{icon[0].toUpperCase()}</span>
-              </div>
-            ))}
-          </div>
-        );
+        return (() => {
+          const socialMeta = {
+            facebook:  { Icon: Facebook,  bg: '#1877f2' },
+            twitter:   { Icon: Twitter,   bg: '#1da1f2' },
+            instagram: { Icon: Instagram, bg: 'linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)' },
+            linkedin:  { Icon: Linkedin,  bg: '#0a66c2' },
+            youtube:   { Icon: Youtube,   bg: '#ff0000' },
+          };
+          return (
+            <div className={`flex gap-3 ${block.align || 'justify-center'}`}>
+              {block.icons?.map(platform => {
+                const meta = socialMeta[platform];
+                if (!meta) return null;
+                const { Icon, bg } = meta;
+                return (
+                  <div key={platform} className="w-10 h-10 rounded-full flex items-center justify-center shadow-md" style={{ background: bg }}>
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })();
       
       case BlockTypes.CONTAINER:
         return (
@@ -991,6 +1062,7 @@ const NestedBlock = ({
                       onChange={(e) => onUpdate({ ...block, bgColor: e.target.value })}
                       className="w-full h-10 rounded cursor-pointer"
                     />
+                    <ColorSwatches onChange={(c) => onUpdate({ ...block, bgColor: c })} />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">Text Color</label>
@@ -1000,6 +1072,7 @@ const NestedBlock = ({
                       onChange={(e) => onUpdate({ ...block, textColor: e.target.value })}
                       className="w-full h-10 rounded cursor-pointer"
                     />
+                    <ColorSwatches onChange={(c) => onUpdate({ ...block, textColor: c })} />
                   </div>
                 </div>
               </>
@@ -1014,6 +1087,7 @@ const NestedBlock = ({
                   onChange={(e) => onUpdate({ ...block, color: e.target.value })}
                   className="w-full h-10 rounded cursor-pointer"
                 />
+                <ColorSwatches onChange={(c) => onUpdate({ ...block, color: c })} />
               </div>
             )}
             
@@ -1076,6 +1150,20 @@ const NestedBlock = ({
                     onChange={(e) => onUpdate({ ...block, instagramUrl: e.target.value })}
                   />
                 )}
+                {block.icons?.includes('linkedin') && (
+                  <Input
+                    label="LinkedIn URL"
+                    value={block.linkedinUrl || ''}
+                    onChange={(e) => onUpdate({ ...block, linkedinUrl: e.target.value })}
+                  />
+                )}
+                {block.icons?.includes('youtube') && (
+                  <Input
+                    label="YouTube URL"
+                    value={block.youtubeUrl || ''}
+                    onChange={(e) => onUpdate({ ...block, youtubeUrl: e.target.value })}
+                  />
+                )}
               </>
             )}
             
@@ -1088,6 +1176,7 @@ const NestedBlock = ({
                   onChange={(e) => onUpdate({ ...block, bgColor: e.target.value })}
                   className="w-full h-10 rounded cursor-pointer"
                 />
+                <ColorSwatches onChange={(c) => onUpdate({ ...block, bgColor: c })} />
               </div>
             )}
             
@@ -1101,6 +1190,7 @@ const NestedBlock = ({
                     onChange={(e) => onUpdate({ ...block, bgColor: e.target.value })}
                     className="w-full h-10 rounded cursor-pointer"
                   />
+                  <ColorSwatches onChange={(c) => onUpdate({ ...block, bgColor: c })} />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>

@@ -4,7 +4,7 @@ import { useAuthStore } from '../../store/authStore';
 import { usePermissions } from '../../hooks/usePermissions';
 import {
   ChevronDown, Building2, Check, Plus, Shield,
-  Bell, Search, LogOut, User, Settings, ChevronRight,
+  Bell, Search, LogOut, User, Settings, ChevronRight, X,
 } from 'lucide-react';
 
 const PAGE_TITLES = {
@@ -25,6 +25,7 @@ const Navbar = ({ title }) => {
 
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [confirmLogout, setConfirmLogout] = useState(false);
   const accountMenuRef = useRef(null);
   const userMenuRef = useRef(null);
 
@@ -49,7 +50,13 @@ const Navbar = ({ title }) => {
     }
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
+    setShowUserMenu(false);
+    setConfirmLogout(true);
+  };
+
+  const doLogout = async () => {
+    setConfirmLogout(false);
     await logout();
     navigate('/login');
   };
@@ -69,6 +76,24 @@ const Navbar = ({ title }) => {
   const pathParts = location.pathname.replace('/dashboard', '').split('/').filter(Boolean);
 
   return (
+    <>
+    {confirmLogout && (
+      <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setConfirmLogout(false)}>
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6" onClick={e => e.stopPropagation()}>
+          <div className="flex items-start justify-between mb-3">
+            <h3 className="text-base font-semibold text-slate-900">Sign Out</h3>
+            <button onClick={() => setConfirmLogout(false)} className="text-slate-400 hover:text-slate-600 transition-colors p-0.5">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <p className="text-sm text-slate-500 mb-5">Are you sure you want to sign out of Mail Pilot?</p>
+          <div className="flex gap-2.5">
+            <button onClick={() => setConfirmLogout(false)} className="flex-1 py-2 rounded-xl text-sm font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Cancel</button>
+            <button onClick={doLogout} className="flex-1 py-2 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-500 transition-colors">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    )}
     <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-30">
 
       {/* ── Left: Breadcrumb ──────────────────────────────────────────── */}
@@ -195,6 +220,7 @@ const Navbar = ({ title }) => {
         </div>
       </div>
     </header>
+    </>
   );
 };
 

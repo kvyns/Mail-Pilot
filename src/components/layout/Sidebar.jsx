@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { useCreditStore } from '../../store/creditStore';
 import { usePermissions } from '../../hooks/usePermissions';
 import {
   LayoutDashboard, Users, Users2, Mail, FileText,
-  CreditCard, Settings, ShieldAlert, LogOut, Zap,
+  CreditCard, ShieldAlert, Zap,
 } from 'lucide-react';
 
 const allNavItems = [
@@ -15,13 +15,11 @@ const allNavItems = [
   { name: 'Users',      path: '/dashboard/users',     icon: Users,           permission: 'view:users' },
   { name: 'Credits',    path: '/dashboard/credits',   icon: CreditCard,      permission: 'view:credits' },
   { name: 'Team',       path: '/dashboard/team',      icon: Users2,          permission: 'view:team' },
-  { name: 'Settings',   path: '/dashboard/settings',  icon: Settings,        permission: 'view:settings' },
 ];
 
 const Sidebar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { user, selectedAccount, logout } = useAuthStore();
+  const { user, selectedAccount } = useAuthStore();
   const { balance } = useCreditStore();
   const { can, roleMeta, isActive: accessActive } = usePermissions();
 
@@ -44,11 +42,6 @@ const Sidebar = () => {
 
   const isActivePath = (path) =>
     path === '/dashboard' ? location.pathname === path : location.pathname.startsWith(path);
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
 
   return (
     <div className="h-full bg-slate-950 text-white w-64 fixed left-0 top-0 flex flex-col border-r border-slate-800/60">
@@ -132,13 +125,6 @@ const Sidebar = () => {
               {roleMeta.label}
             </span>
           </div>
-          <button
-            onClick={handleLogout}
-            title="Sign out"
-            className="text-slate-500 hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-red-950/50"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
         </div>
       </div>
     </div>
